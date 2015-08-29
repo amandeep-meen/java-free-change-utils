@@ -48,7 +48,17 @@ public class DetectChanges {
 				}
 
 				try {
-					Method metthod = clazz.getMethod(getMetthodName(field));
+					Method metthod = null;
+					if (field.isAnnotationPresent(Changed.class)) {
+						Changed annotation = field.getAnnotation(Changed.class);
+						if (annotation.method().isEmpty()) {
+							metthod = clazz.getMethod(getMetthodName(field));
+						} else {
+							metthod = clazz.getMethod(annotation.method());
+						}
+					} else {
+						metthod = clazz.getMethod(getMetthodName(field));
+					}
 					Object val1 = metthod.invoke(arg1);
 					Object val2 = metthod.invoke(arg2);
 					if (isSame(val1, val2)) {

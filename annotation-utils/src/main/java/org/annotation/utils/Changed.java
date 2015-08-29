@@ -11,6 +11,15 @@ public @interface Changed {
 
 	Class<? extends ComparisonHelper<?>> helper() default DefaultHelper.class;
 
+	/**
+	 * Usually it expects every declared field has getter method. as per java
+	 * conventions.<br>
+	 * But it can give overridden by defining method name.
+	 * 
+	 * @return
+	 */
+	String method() default "";
+
 	public static interface ComparisonHelper<T> {
 		public boolean isSame(T arg1, T arg2);
 	}

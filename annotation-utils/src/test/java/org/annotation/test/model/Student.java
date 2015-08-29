@@ -8,6 +8,8 @@ import org.annotation.utils.Changed;
 public class Student {
 	private Integer rollNumber;
 	private String name;
+	
+	@Changed(method= "getPass")
 	private boolean pass;
 
 	private Collection<Student> colleagues;
@@ -42,7 +44,7 @@ public class Student {
 		this.name = name;
 	}
 
-	public boolean isPass() {
+	public boolean getPass() {
 		return pass;
 	}
 
