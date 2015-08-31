@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.FIELD, ElementType.TYPE })
-public @interface Changed {
+public @interface ObserveChanges {
 
 	Class<? extends ComparisonHelper<?>> helper() default DefaultHelper.class;
 
@@ -26,10 +26,12 @@ public @interface Changed {
 
 	public static class DefaultHelper implements ComparisonHelper<Object> {
 
+		public static DefaultHelper INSTANCE = new DefaultHelper();
+
 		@Override
 		public boolean isSame(Object arg1, Object arg2) {
 
-			return DetectChanges.isSame(arg1, arg2);
+			return DetectChangesUtils.isSame(arg1, arg2);
 		}
 
 	}

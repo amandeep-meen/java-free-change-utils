@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import org.annotation.test.model.Student;
 import org.annotation.test.model.StudentCollegeDataBuilder;
-import org.annotation.utils.DetectChanges;
+import org.annotation.utils.DetectChangesUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,11 +15,11 @@ public class StudentColleagueTest {
 	public void testNameChanges() {
 
 		Student s1 = new Student("S1");
-		s1.setColleagues(build(4, 0));
+		s1.setColleagues(build(400, 0));
 		Student s2 = new Student("S1");
-		s2.setColleagues(build(4, 0));
+		s2.setColleagues(build(400, 0));
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.TRUE, new Boolean(actual));
 	}
 
@@ -27,11 +27,11 @@ public class StudentColleagueTest {
 	public void testColleageDifferentSizeChanges() {
 
 		Student s1 = new Student("S1");
-		s1.setColleagues(build(4, 0));
+		s1.setColleagues(build(400, 0));
 		Student s2 = new Student("S1");
-		s2.setColleagues(build(3, 0));
+		s2.setColleagues(build(300, 0));
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.FALSE, new Boolean(actual));
 	}
 
@@ -39,11 +39,11 @@ public class StudentColleagueTest {
 	public void testColleageSameSizeHavingNullChanges() {
 
 		Student s1 = new Student("S1");
-		s1.setColleagues(build(2, 2));
-		Student s2 = new Student("S1");
-		s2.setColleagues(build(2, 2));
+		s1.setColleagues(build(200, 2));
+		Student s2 = new Student("s1");
+		s2.setColleagues(build(200, 2));
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.TRUE, new Boolean(actual));
 	}
 
@@ -55,7 +55,7 @@ public class StudentColleagueTest {
 		Student s2 = new Student("S1");
 		s2.setColleagues(build(2, 3));
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.FALSE, new Boolean(actual));
 	}
 
@@ -67,7 +67,7 @@ public class StudentColleagueTest {
 		Student s2 = new Student("S1");
 		s2.setColleagues(new HashSet<Student>(build(4, 0)));
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.TRUE, new Boolean(actual));
 
 		Assert.assertEquals(new Integer(4), new Integer(s1.getColleagues().size()));
@@ -81,7 +81,7 @@ public class StudentColleagueTest {
 		s1.setColleagues(build(0, 0));
 		Student s2 = new Student("S1");
 
-		boolean actual = DetectChanges.isSame(s1, s2);
+		boolean actual = DetectChangesUtils.isSame(s1, s2);
 		Assert.assertEquals(Boolean.TRUE, new Boolean(actual));
 	}
 

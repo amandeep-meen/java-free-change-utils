@@ -7,7 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class DetectChanges {
+import org.annotation.utils.ObserveChanges.ComparisonHelper;
+
+public class DetectChangesUtils {
 
 	public static <T> boolean isChanged(T arg1, T arg2) {
 		return isSame(arg1, arg2) == false;
@@ -40,30 +42,31 @@ public class DetectChanges {
 		 * return isSameCollection(arg1, arg2); }
 		 */
 
-		if (clazz.isAnnotationPresent(Changed.class)) {
+		if (clazz.isAnnotationPresent(ObserveChanges.class)) {
 			for (Field field : clazz.getDeclaredFields()) {
-				if (field.isAnnotationPresent(IgnoreChanged.class)) {
+				if (field.isAnnotationPresent(IgnoreChanges.class)) {
 					/* Ignore this field */
 					continue;
 				}
 
 				try {
-					Method metthod = null;
-					if (field.isAnnotationPresent(Changed.class)) {
-						Changed annotation = field.getAnnotation(Changed.class);
-						if (annotation.method().isEmpty()) {
-							metthod = clazz.getMethod(getMetthodName(field));
-						} else {
-							metthod = clazz.getMethod(annotation.method());
-						}
+
+					boolean same = false;
+					if (field.isAnnotationPresent(ObserveChanges.class)) {
+						ObserveChanges annotation = field.getAnnotation(ObserveChanges.class);
+						Method metthod = clazz.getMethod(annotation.method().isEmpty() ? getMetthodName(field) : annotation.method());
+						@SuppressWarnings("unchecked")
+						ComparisonHelper<? super Object> helper = (ComparisonHelper<? super Object>) annotation.helper().newInstance();
+						same = helper.isSame(metthod.invoke(arg1), metthod.invoke(arg2));
 					} else {
-						metthod = clazz.getMethod(getMetthodName(field));
+						Method metthod = clazz.getMethod(getMetthodName(field));
+						ComparisonHelper<? super Object> helper = ObserveChanges.DefaultHelper.INSTANCE;
+						same = helper.isSame(metthod.invoke(arg1), metthod.invoke(arg2));
 					}
-					Object val1 = metthod.invoke(arg1);
-					Object val2 = metthod.invoke(arg2);
-					if (isSame(val1, val2)) {
+					if (same) {
 						continue;
 					}
+
 					/* Wherever mismatch return */
 					return false;
 				} catch (Exception e) {

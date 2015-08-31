@@ -2,14 +2,16 @@ package org.annotation.test.model;
 
 import java.util.Collection;
 
-import org.annotation.utils.Changed;
+import org.annotation.utils.ObserveChanges;
+import org.annotation.utils.helper.StringIgnoreCaseComparisonHelper;
 
-@Changed
+@ObserveChanges
 public class Student {
 	private Integer rollNumber;
+	@ObserveChanges(helper =  StringIgnoreCaseComparisonHelper.class)
 	private String name;
-	
-	@Changed(method= "getPass")
+
+	@ObserveChanges(method = "getPass")
 	private boolean pass;
 
 	private Collection<Student> colleagues;
